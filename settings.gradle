@@ -1,0 +1,3 @@
+rootProject.name = "JndvSipSdk"
+include ':app'
+include ':JndvSipLibrary'
