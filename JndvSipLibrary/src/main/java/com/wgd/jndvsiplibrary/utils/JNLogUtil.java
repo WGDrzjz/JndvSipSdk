@@ -1,4 +1,4 @@
-package com.wgd.jndvsiplibrary;
+package com.wgd.jndvsiplibrary.utils;
 
 import android.os.Environment;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.wgd.jndvsiplibrary;
+package com.wgd.jndvsiplibrary.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package com.wgd.jndvsiplibrary;
+package com.wgd.jndvsiplibrary.utils;
 
 public class JNPjSipConstants {
     public static final String PJSIP_NUMBER = "pjsip_number";

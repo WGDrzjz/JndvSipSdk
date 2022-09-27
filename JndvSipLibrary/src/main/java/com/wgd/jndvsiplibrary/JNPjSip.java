@@ -1,42 +1,31 @@
-package com.jndv.jndvchatlibrary.chatSIP;
+package com.wgd.jndvsiplibrary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.widget.Toast;
 
-import com.ehome.sipservice
-        .BroadcastEventReceiver;
-import com.ehome.sipservice.Logger;
+import com.ehome.sipservice.BroadcastEventReceiver;
 import com.ehome.sipservice.SipAccountData;
-import com.ehome.sipservice.SipConnectState;
 import com.ehome.sipservice.SipService;
 import com.ehome.sipservice.SipServiceCommand;
-import com.jndv.jndvchatlibrary.log.JCLogUtil;
-import com.jndv.jndvchatlibrary.utils.JCSpUtils;
-import com.jndv.jndvchatlibrary.utils.JCpreferenceSaves;
+import com.wgd.jndvsiplibrary.utils.JNLogUtil;
+import com.wgd.jndvsiplibrary.utils.JNPjSipConstants;
+import com.wgd.jndvsiplibrary.utils.JNSpUtils;
 
-import net.util.NetStateChangeObserver;
-import net.util.NetStateChangeReceiver;
-import net.util.NetworkType;
-
-import org.pjsip.pjsua2.OnInstantMessageParam;
-import org.pjsip.pjsua2.RegProgressParam;
 import org.pjsip.pjsua2.VideoPreview;
 import org.pjsip.pjsua2.VideoWindow;
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsip_status_code;
-import org.pjsip.pjsua2.pjsua2JNI;
 
 /**
  * pjsip相关工具类
  * */
-public class JCPjSip {
+public class JNPjSip {
     private static final String TAG = "PjSip";
-    private static JCPjSip instance = null;
+    private static JNPjSip instance = null;
 
     private String psw;
     private String host;
@@ -61,7 +50,7 @@ public class JCPjSip {
             Log.d(TAG, "onRegistration, accountID:" + accountID + "," + registrationStateCode);
             if (registrationStateCode == pjsip_status_code.PJSIP_SC_OK) {
                 mAccountId = accountID;
-                JCSpUtils.setString(mContext,"myAccount",accountID);
+                JNSpUtils.setString(mContext,"myAccount",accountID);
                 Toast.makeText(mContext, "User:" + accountID + " 注册成功", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "onRegistration: " + "User:" + accountID + " 注册成功！");
                 if (mPjSipListener != null)
@@ -180,15 +169,15 @@ public class JCPjSip {
         }
     };
 
-    private JCPjSip(Context context) {
+    private JNPjSip(Context context) {
         this.mContext = context;
     }
 
-    public static JCPjSip getInstance(Context context) {
+    public static JNPjSip getInstance(Context context) {
         if (instance == null) {
-            synchronized (JCPjSip.class) {
+            synchronized (JNPjSip.class) {
                 if (instance == null) {
-                    instance = new JCPjSip(context);
+                    instance = new JNPjSip(context);
                 }
             }
         }
@@ -197,27 +186,27 @@ public class JCPjSip {
 
     //注册
     public void sipRegister() {
-        user = JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_NUMBER,JCPjSipConstants.PJSIP_NUMBER_DEFAULT);
-        psw = JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_PSWD,JCPjSipConstants.PJSIP_PSWD_DEFAULT);
-        host = JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_HOST,JCPjSipConstants.PJSIP_HOST_DEFAULT);
+        user = JNSpUtils.getString(mContext, JNPjSipConstants.PJSIP_NUMBER,JNPjSipConstants.PJSIP_NUMBER_DEFAULT);
+        psw = JNSpUtils.getString(mContext, JNPjSipConstants.PJSIP_PSWD,JNPjSipConstants.PJSIP_PSWD_DEFAULT);
+        host = JNSpUtils.getString(mContext, JNPjSipConstants.PJSIP_HOST,JNPjSipConstants.PJSIP_HOST_DEFAULT);
         if(psw.equals("")){
             psw = "1234";
         }
 //        sipRealm = SpUtil.getString(mContext, PjSipConstants.PJSIP_REALM);
         sipRealm = host;
-        JCLogUtil.e(TAG, "sipRegister:user: " + user);
-        JCLogUtil.e(TAG, "sipRegister:sipRealm: " + sipRealm);
+        JNLogUtil.e(TAG, "sipRegister:user: " + user);
+        JNLogUtil.e(TAG, "sipRegister:sipRealm: " + sipRealm);
         port = 0;//Long.parseLong(TextUtils.equals(JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_PORT), "") ? "0" : JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_PORT,JCPjSipConstants.PJSIP_PORT_DEFAULT));
 //        port = Long.parseLong(JCPjSipConstants.PJSIP_PORT_DEFAULT);//Long.parseLong(TextUtils.equals(JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_PORT), "") ? "0" : JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_PORT,JCPjSipConstants.PJSIP_PORT_DEFAULT));
         try {
-            port = Long.parseLong(JCSpUtils.getString(mContext, JCPjSipConstants.PJSIP_PORT, "0"));
+            port = Long.parseLong(JNSpUtils.getString(mContext, JNPjSipConstants.PJSIP_PORT, "0"));
         }catch (Exception e){
             e.printStackTrace();
         }
         if (TextUtils.isEmpty(user) || TextUtils.isEmpty(psw) || TextUtils.isEmpty(host)
 //                || port == 0
         ) {
-            JCLogUtil.e(TAG, "sipRegister: 请确认sip信息正确 user："+user+" psw:"+psw +" host:"+host + " port:" + port);
+            JNLogUtil.e(TAG, "sipRegister: 请确认sip信息正确 user："+user+" psw:"+psw +" host:"+host + " port:" + port);
         } else {
             // we can set sip stack log level to debug
             SipServiceCommand.setSipStackLogLevel(mContext, 5);
@@ -233,10 +222,8 @@ public class JCPjSip {
             SipServiceCommand.setAccount(mContext, mSipAccount);
 
             //SipServiceCommand.getCodecPriorities(this);
-            JCLogUtil.d(TAG, "register: " + mSipAccount.getRegistrarUri() + ", " + mSipAccount.getIdUri());
+            JNLogUtil.d(TAG, "register: " + mSipAccount.getRegistrarUri() + ", " + mSipAccount.getIdUri());
         }
-
-
     }
 
     //给好友发送信息
